@@ -49,12 +49,12 @@ def print_results(filtered_results):
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='Read a file in and find repeating hex substrings.')
 	parser.add_argument('-f', dest='filename', required=True, help='Filename to parse')
-	parser.add_argument('-m', dest='minlength', type=int, default=4, help='minimum length of a hex string to find')
-	parser.add_argument('-M', dest='maxlength', type=int, default=15, help='maximum length of a hex string to find')
-	parser.add_argument('-n', dest='minresult', type=int, default=4, help='minimum number of results of substrings found to print')
-	parser.add_argument('-N', dest='maxresult', type=int, default=15, help='maximum number of results of substrings found to print')
-
+	parser.add_argument('-m', dest='minlength', type=int, default=4, help='minimum length of a hex string to find (default=4)')
+	parser.add_argument('-M', dest='maxlength', type=int, default=15, help='maximum length of a hex string to find (default=15)')
+	parser.add_argument('-n', dest='minresult', type=int, default=4, help='minimum number of results of substrings found to print (default=4)')
+	parser.add_argument('-N', dest='maxresult', type=int, default=15, help='maximum number of results of substrings found to print (default=15)')
 	args = parser.parse_args()
+
 	hexdata = read_file(args.filename)
 	substr_counts = find_substrs(args.minlength, args.maxlength)
 	filtered_results = filter_results(substr_counts, args.minresult, args.maxresult)
