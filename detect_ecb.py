@@ -11,15 +11,19 @@ def read_file(filename):
 	hexdata = binascii.hexlify(data).decode()
 	return hexdata
 
-def find_substrs(hexdata, minlength, maxlength):
+def get_substr():
+	for x, y in combinations(range(len(hexdata) + 1), r = 2):
+		yield hexdata[x:y]
+
+
+def find_substrs(minlength, maxlength):
 	substr_counts = {}
 	print("Finding substrings... this may take a bit...")
-	res = [hexdata[x:y] for x, y in combinations(range(len(hexdata) + 1), r = 2)]
-	print("Number of substrings found: %i" % len(res))
 
-	for substr in res:
+	for substr in get_substr():
 		if len(substr) >= minlength and len(substr) <= maxlength:
 			if substr in substr_counts.keys():
+				print("Found existing substr: %s" % substr)
 				substr_counts[substr] += 1
 			else:
 				substr_counts[substr] = 1
@@ -48,6 +52,7 @@ if __name__ == '__main__':
 
 	args = parser.parse_args()
 	hexdata = read_file(args.filename)
-	substr_counts = find_substrs(hexdata, args.minlength, args.maxlength)
+	substr_counts = find_substrs(args.minlength, args.maxlength)
 	filtered_results = filter_results(substr_counts, args.minresult, args.maxresult)
 	print_results(filtered_results)
+
