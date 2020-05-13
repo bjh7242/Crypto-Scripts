@@ -39,8 +39,12 @@ def filter_results(substr_dict, minresult, maxresult):
 	return filtered_results
 
 def print_results(filtered_results):
-	for key in filtered_results:
-		print("Sub string: %s => %i" % (key, filtered_results[key]))
+	if len(filtered_results.keys()) > 0:
+		print("=== Filtered Results (Substring Result Count: %i <= n <= %i) ===" % (args.minresult, args.maxresult))
+		for key in filtered_results:
+			print("Sub string: %s => %i" % (key, filtered_results[key]))
+	else:
+		print("*** No results matching min/max results for substrings***")
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='Read a file in and find repeating hex substrings.')
