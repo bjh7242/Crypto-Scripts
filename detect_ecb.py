@@ -2,6 +2,7 @@
 
 import argparse
 import binascii
+import os
 import pprint
 from itertools import combinations
 
@@ -46,6 +47,23 @@ def print_results(filtered_results):
 	else:
 		print("*** No results matching min/max results for substrings***")
 
+def check_block_cipher(hexdata):
+	if filesize % 8 != 0:
+		print("WARNING: This may not be using a block cipher (length of data is not divisible by 8)")
+	else:
+		print("This might be using a block cipher")
+		check_aes(hexdata)
+
+def check_aes(hexdata):
+	print("length: %i; mod 8: %i" % (filesize, len(hexdata) % 8))
+	if filesize % 16 == 0:
+		print("[*] This may be using AES (data length is divisible by 16)")
+		print("[*] However, it could be using DES/3DES with an 8 byte block cipher")
+	elif filesize % 8 == 0:
+		print("[*] Data may be using an 8 byte block cipher using DES/3DES (data length is divisible by 8)")
+	else:
+		print("[-] Unable to determine potential block cipher")
+
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='Read a file in and find repeating hex substrings.')
 	parser.add_argument('-f', dest='filename', required=True, help='Filename to parse')
@@ -55,7 +73,9 @@ if __name__ == '__main__':
 	parser.add_argument('-N', dest='maxresult', type=int, default=15, help='maximum number of results of substrings found to print (default=15)')
 	args = parser.parse_args()
 
+	filesize = os.path.getsize(args.filename)
 	hexdata = read_file(args.filename)
+	check_block_cipher(hexdata)
 	substr_counts = find_substrs(args.minlength, args.maxlength)
 	filtered_results = filter_results(substr_counts, args.minresult, args.maxresult)
 	print_results(filtered_results)
